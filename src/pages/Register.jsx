@@ -45,12 +45,13 @@ const Register = () => {
       if (error.response?.data) {
         setError(JSON.stringify(error.response.data));
       } else {
-        setError("something went wrong, Please try again.");
+        setError("Something went wrong, Please try again.");
       }
     } finally {
       setLoading(false);
     }
   }
+
   return (
     <div>
       <div className="container mt-5">
@@ -83,6 +84,7 @@ const Register = () => {
             <div className="card p-4">
               <form onSubmit={handleSubmit}>
                 <h3 className="text-secondary py-4 text-center">Register</h3>
+
                 {error && <div className="alert alert-danger">{error}</div>}
 
                 <div className="mb-3">
