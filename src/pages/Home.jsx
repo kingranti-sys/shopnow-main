@@ -44,11 +44,11 @@ const Home = () => {
 
   const getCategories = async () => {
     try {
-      const response = await api.get("/product-categories");
+      const response = await api.get("/product-categories/");
       setCategories(response.data);
-    } catch (error) {
-      console.log(error);
-      setCreateError("Unable tp load Categories");
+    } catch (err) {
+      console.log(err);
+      setCreateError("Unable to load categories");
     }
   };
 
@@ -177,134 +177,151 @@ const Home = () => {
         <div className="text-center my-3">
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-outline-danger"
             data-bs-toggle="modal"
             data-bs-target="#createProductModal"
             onClick={getCategories}
           >
             Create Product
           </button>
+        </div>
+
+        <div
+          className="modal fade"
+          id="createProductModal"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="createProductModalLabel"
+          aria-hidden="true"
+        >
           <div
-            className="modal fade"
-            id="createProductModal"
-            tabIndex="-1"
-            role="dialog"
-            aria-labelledby="createProductModalLabel"
-            aria-hidden="true"
+            className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
+            role="document"
           >
-            <div
-              className="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg"
-              role="document"
-            >
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="modalTitleId">
-                    Create Product
-                  </h5>
-                  <button
-                    type="button"
-                    className="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                  ></button>
-                </div>
-                <form onSubmit={handleCreateProduct}>
-                  <div className="modal-body">
-                    {createError && (
-                      <div className="alert alert-danger">{createError}</div>
-                    )}
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="modalTitleId">
+                  Create Product
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <form onSubmit={handleCreateProduct}>
+                <div class="modal-body">
+                  {createError && (
+                    <div className="alert alert-danger">{createError}</div>
+                  )}
+                  <div className="mb-3">
+                    <label className="form-label">Category</label>
 
-                    <div className="mb-3">
-                      <label className="form-label">Category</label>
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                      className="form-select"
+                    >
+                      <option value="">Select category</option>
 
-                      <select
-                        name="category"
-                        value={formData.category}
-                        onChange={handleChange}
-                        className="form-select"
-                      >
-                        <option value="">select category</option>
+                      {categories.map((category) => (
+                        <option value={category.id} key={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Product Name</label>
 
-                        {categories.map((category) => (
-                          <option value={category.id} key={category.id}>
-                            {category.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Description</label>
 
-                    <div className="mb-3">
-                      <label className="form-label">Product Name</label>
-
+                    <textarea
+                      name="description"
+                      className="form-control"
+                      value={formData.description}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Price</label>
                       <input
-                        type="text"
+                        type="number"
+                        name="price"
                         className="form-control"
-                        name="name"
-                        value={formData.name}
+                        value={formData.price}
                         onChange={handleChange}
+                        min="0"
                       />
                     </div>
 
-                    <div className="mb-3">
-                      <label className="form-label">Description</label>
-
-                      <textarea
-                        name="description"
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Stock</label>
+                      <input
+                        type="number"
+                        name="stock"
                         className="form-control"
-                        value={formData.description}
+                        value={formData.stock}
                         onChange={handleChange}
-                      ></textarea>
-                    </div>
-
-                    <div className="row">
-                      <div className="col-md-6 mb-3">
-                        <label className="form-label">Price</label>
-                        <input
-                          type="number"
-                          name="price"
-                          className="forn-control"
-                          value={formData.price}
-                          onChange={handleChange}
-                          min="0"
-                        />
-                      </div>
-
-                      <div className="col-md-6 mb-3">
-                        <label className="form-control">Stock</label>
-
-                        <input
-                          type="number"
-                          name="stock"
-                          className="form-control"
-                          value={formData.stock}
-                          onChange={handleChange}
-                          min="0"
-                        />
-                      </div>
+                        min="0"
+                      />
                     </div>
                   </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Close
-                    </button>
-                    <button type="button" className="btn btn-primary">
-                      Save
-                    </button>
+
+                  <div className="form-check mb-3">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="is_available"
+                      name="is_available"
+                      checked={formData.is_available}
+                      onChange={handleChange}
+                    />
+                    <label className="form-check-label" htmlFor="is_available">
+                      Product is available
+                    </label>
                   </div>
-                </form>
-              </div>
+
+                  <div className="mb-4">
+                    <label className="form-label"> Product Images </label>
+                    <input
+                      type="file"
+                      className="form-control"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImages}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-dark w-100"
+                    disabled={creating}
+                  >
+                    {creating ? "Creating..." : "Create Product"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-
-          <script>
-            const myModal = new bootstrap.Modal(
-            document.getElementById("modalId"), options, );
-          </script>
         </div>
+
+        <script>
+          const myModal = new bootstrap.Modal(
+          document.getElementById("modalId"), options, );
+        </script>
 
         <div className="row">
           {products.map((product) => (
@@ -323,7 +340,7 @@ const Home = () => {
                 )}
 
                 <div className="card-body">
-                  <h5 className="caard-title">{product.name}</h5>
+                  <h5 className="card-title">{product.name}</h5>
                   <p className="card-text">{product.description}</p>
                   <h5 className="text-danger">
                     ₦{Number(product.price).toLocaleString()}
